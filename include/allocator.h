@@ -1,20 +1,29 @@
-#ifndef ALLOC_H
-#define ALLOC_H
+#ifndef ALLOCATOR_H
+#define ALLOCATOR_H
+
+#include <stdint.h>
 
 typedef struct Allocator Allocator;
+typedef struct AllocatorNode AllocatorNode;
+
+struct AllocatorNode {
+  AllocatorNode* next;
+  uint32_t size;
+  uint8_t* block;
+  uint8_t* pointer;
+};
 
 struct Allocator {
-  void* blocks[];
-  void* pointers[];
-  unsigned int block_count;
-}
+  uint32_t block_size;
+  AllocatorNode* node;
+};
 
 Allocator* initAllocator();
-Allocator* initAllocator(int size);
+Allocator* initAllocator(uint32_t size);
+uint8_t freeAllocator(Allocator* allocator);
 
-void* alloc(unsigned int count, unsigned int size, Allocator* Allocator);
+void* alloc(uint32_t count, uint32_t size, Allocator* Allocator);
 
-int destroyAllocator(Allocator* allocator);
 
-#endif /* ALLOC_H */
+#endif /* ALLOCATOR_H */
 
